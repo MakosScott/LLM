@@ -27,6 +27,13 @@ allwords = sorted(set(preprocessed)) #create a sorted list of unique tokens (set
 vocab_size = len(allwords) #calculate the vocabulary size (number of *unique* tokens)
 print("Vocabulary size:", vocab_size) #print the vocabulary size
 
+#creating the vocabulary
+vocab = {token:integer for integer, token in enumerate(allwords)} #create a dictionary mapping each unique token to a unique integer ID using a dictionary comprehension and the enumerate function
+for i, item in enumerate(vocab.items()):
+    print(item)
+    if i >= 50:
+        break 
+
 #We now begin the process of creating the tokenizer class.
 class SimpleTokenizerV1:
     def __init__(self, vocab):
@@ -44,3 +51,9 @@ class SimpleTokenizerV1:
         text = " ".join([self.int_to_str[i] for i in ids]) #join the list of tokens into a single string with spaces in between
         text = re.sub(r'\s([,.:;?_!"()\']|--)\s', r'\1', text) #remove spaces around punctuation marks using a regular expression substitution
         return text
+    
+#Example of tokenization using encode()
+tokenizer = SimpleTokenizerV1(vocab) #create an instance of the SimpleTokenizerV1 class with a vocabulary mapping from string to integer
+text = """"It's the last he painted, you know,"Mrs. Gisburn said with pardonable pride."""
+ids = tokenizer.encode(text) #encode the input text into a list of integer IDs using the encode method of the tokenizer
+print(ids) #print the tokenized list (will be in numeric form)
