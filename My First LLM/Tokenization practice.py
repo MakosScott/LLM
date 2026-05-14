@@ -29,6 +29,7 @@ print("Vocabulary size:", vocab_size) #print the vocabulary size
 
 #creating the vocabulary
 vocab = {token:integer for integer, token in enumerate(allwords)} #create a dictionary mapping each unique token to a unique integer ID using a dictionary comprehension and the enumerate function
+print("First 50 items in the vocabulary, with ID:") #print the first 50 items in the vocabulary to check the mapping
 for i, item in enumerate(vocab.items()):
     print(item)
     if i >= 50:
@@ -54,6 +55,23 @@ class SimpleTokenizerV1:
     
 #Example of tokenization using encode()
 tokenizer = SimpleTokenizerV1(vocab) #create an instance of the SimpleTokenizerV1 class with a vocabulary mapping from string to integer
-text = """"It's the last he painted, you know,"Mrs. Gisburn said with pardonable pride."""
+text = """"It's the last he painted, you know," Mrs. Gisburn said with pardonable pride."""
 ids = tokenizer.encode(text) #encode the input text into a list of integer IDs using the encode method of the tokenizer
+print("List of IDs for each tokenized word in the text : """"It's the last he painted, you know,"Mrs. Gisburn said with pardonable pride.""" "") #print a message indicating that the following output is the tokenized list of IDs
 print(ids) #print the tokenized list (will be in numeric form)
+
+
+#now we will decode the list of IDs back into text using the decode() method of the tokenizer
+print("Decoded text:") #print a message indicating that the following output is the decoded text
+print(tokenizer.decode(ids)) #decode the list of integer IDs back into text using the decode method of the tokenizer
+
+#As the output showed, we could encode and decode the text successfully. Now we will obseve what happens when we try to encode a text that contains a token that is not in our vocabulary.
+# text = "Hello, do you like tea?"
+# print(tokenizer.encode(text)) #running this line return an error. KeyError: 'Hello' because the token "Hello" is not in our vocabulary, which means that the tokenizer does not know how to convert it into an integer 
+
+#WE will now create a tokenizer that can handle out-of-vocabulary (OOV) tokens and Endoftext tokens. 
+all_tokens = sorted(list(set(preprocessed))) #create a sorted list of unique tokens from the preprocessed text
+all_tokens.extend(["<|endoftext|>", "<|unk|>"]) #add special tokens for end of text and out-of-vocabulary to the list of all tokens
+vocab = {token:integer for integer, token in enumerate(all_tokens)} #create a dictionary mapping each unique token (including special tokens) to a unique integer ID.
+
+print(len(vocab.items())) #print the size of the new vocabulary (which should be larger than before due to the addition of special tokens) which is no 1130 +2 for the two new special tokens.
